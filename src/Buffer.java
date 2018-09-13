@@ -51,16 +51,16 @@ public class Buffer {
 		capacidad--;
 		
 		//SI ESTA BIEN ESTE NOTIFY ALL??????????????????????????????????????????????????????????
-		this.notifyAll();
+//		this.notifyAll();
 	}
 	
 	public synchronized Mensaje retirarMensaje() {
 		//El primer mensaje en ingresar a la lista es el primero en salir
 		Mensaje mess = mensajes.removeFirst();
 		
-		System.out.println("El mensaje: " + mess.getMensaje() + " ha sido procesado por el servidor");
+		System.out.println("El mensaje: " + mess.getMensaje() + " ha sido retirado por el servidor");
 		//SI ESTA BIEN ESTE NOTIFY ALL??????????????????????????????????????????????????????????
-		this.notifyAll();
+//		this.notifyAll();
 		
 		capacidad++;
 		return mess;
@@ -91,7 +91,7 @@ public class Buffer {
 			count++;
 			int numMensajes = Integer.parseInt(br.readLine());
 			Cliente nuevoCliente = new Cliente(buffer, numMensajes, count);
-			System.out.println("Se creo el cliente: " + count + " con un numero de mensajes: " + numMensajes );
+			System.out.println("Se creo el cliente: " + nuevoCliente.getId() + " con un numero de mensajes: " + numMensajes );
 			nuevoCliente.start();	
 			
 			System.out.println("La capacidad del buffer es: " + buffer.darCapacidad());
@@ -107,8 +107,8 @@ public class Buffer {
 			server.start();		
 		}
 		
-		while(numClientes != 0 && buffer.darMensajes().size()!= 0) {
-			
-		}
+//		while(numClientes != 0 && buffer.darMensajes().size()!= 0) {
+//			
+//		}
 	}
 }

@@ -66,14 +66,15 @@ public class Cliente extends Thread {
 	public void run() {
 
 		for (int i = 0; i < numeroMensajes; i++) {
-			Mensaje mensaje = new Mensaje(i, this);
-			enviarMensaje(mensaje);
+			//El contenido del mensaje es i*id para que los mensajes sean diferentes
+			Mensaje mensaje = new Mensaje(i*id, this);
 			System.out.println("El cliente "+ id + " envio el mensaje: " + mensaje.getMensaje());
+			enviarMensaje(mensaje);
 		}
 		
 		int numeroActual = buffer.darNumClientes()-1;
 		buffer.setNumClientes(numeroActual);
-		System.out.println("El numero de clientes es: " + numeroActual);
+		System.out.println("El numero de clientes es: " + buffer.darNumClientes());
 	}
 }
 
