@@ -2,79 +2,92 @@
 
 import java.util.LinkedList;
 
-
+/**
+ * Clase que representa a los clientes que dejan los mensajes en el buffer.
+ */
 public class Cliente extends Thread {
 
 	//..................................Atributos..............................
 
-	//Lista donde se van a almacenar los mensajes.
+	/**
+	 * Lista donde se van a almacenar los mensajes.
+	 */
 	private  LinkedList<Mensaje> list;
 
-	//Buffer del cliente
+	/**
+	 * Buffer del cliente
+	 */
 	private Buffer buffer;
 
-	//Identificador del cliente
+	/**
+	 * Identificador del cliente
+	 */
 	private int id;
 
-	//Numero de mensajes del cliente
+	/**
+	 * Numero de mensajes del cliente
+	 */
 	private int numeroMensajes;
 
 	//...................................Metodos...............................
-
-	//El par√°metro numMensajes se refiere al numero de consultas que va a hacer el cliente, lo que
-	//corresponde al n√∫mero de mensajes que el cliente va a enviar.
-	public Cliente(Buffer buff, int numMensajes, int identi){
+	
+	/**
+	 * MÈtodo constructor de la clase Cliente
+	 * @param buff Buffer el cual el cliente va a consultar
+	 * @param numMensajes N˙mero de consultas que va a hacer el cliente
+	 * @param identificador id del cliente
+	 */
+	public Cliente(Buffer buff, int numMensajes, int identificador){
 
 		buffer = buff;
-		id = identi;
+		id = identificador;
 		numeroMensajes = numMensajes;
 
 		//Inicializar la lista de mensajes y agregar mensajes, para esto se utiliza el tama√±o 
 		list = new LinkedList<>();
-		for (int i = 0; i < numMensajes; i++){
-			Mensaje mes = new Mensaje(i,this);
-			list.add(mes);
+		for (int i = 1; i <= numeroMensajes; i++){
+			//El contenido del mensaje es i*id para que los mensajes sean diferentes
+			Mensaje mensaje = new Mensaje(i*id, this);
+			list.add(mensaje);
 		}
-
 	}
 
-	public void enviarMensaje(Mensaje mensaje){
+	/**
+	 * EnvÌa un mensaje al buffer
+	 * @param mensaje mensaje a enviar
+	 */
+	private void enviarMensaje(Mensaje mensaje){
 		//Espere si el Buffer esta lleno
 		while(buffer.darCapacidad() == 0) {
 			System.out.println("El buffer esta ocupado, el cliente " + id + " esta esperando.");
-			//El cliente debe ceder el procesador despu√©s de cada intento
+			//El cliente debe ceder el procesador despuÈs de cada intento
 			yield();
 		}
 
-		//El buffer tiene disponibilidad ahora el cliente puede enviar su mensaje
+		//El buffer tiene disponibilidad, ahora el cliente puede enviar su mensaje
 		buffer.guardarMensaje(mensaje);
 
 		synchronized (mensaje) {
 			try {
-				//Si no es posible depositar el mensaje se queda en espera activa
+				//El cliente espera a que su mensaje sea procesado
 				mensaje.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-
-		//El notify all va aqui o va en el m√©todo guardar mensaje del buffer?????????????????????????
-		//notify();
 	}
 
+	/**
+	 * El cliente envÌa todos los mensajes que tenga en la lista
+	 */
 	@Override
 	public void run() {
-
-		for (int i = 0; i < numeroMensajes; i++) {
-			//El contenido del mensaje es i*id para que los mensajes sean diferentes
-			Mensaje mensaje = new Mensaje(i*id, this);
+		for (Mensaje mensaje : list) {
 			System.out.println("El cliente "+ id + " envio el mensaje: " + mensaje.getMensaje());
 			enviarMensaje(mensaje);
 		}
-		
-		int numeroActual = buffer.darNumClientes()-1;
-		buffer.setNumClientes(numeroActual);
-		System.out.println("El numero de clientes es: " + buffer.darNumClientes());
+		//Una vez el cliente termina sus solicitudes, reduce el n˙mero de clientes
+		buffer.decNumClientes();
 	}
 }
 
