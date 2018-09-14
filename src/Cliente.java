@@ -47,7 +47,7 @@ public class Cliente extends Thread {
 		list = new LinkedList<>();
 		for (int i = 1; i <= numeroMensajes; i++){
 			//El contenido del mensaje es i*id para que los mensajes sean diferentes
-			Mensaje mensaje = new Mensaje(i*id, this);
+			Mensaje mensaje = new Mensaje(i*id);
 			list.add(mensaje);
 		}
 	}

@@ -10,11 +10,6 @@ public class Mensaje {
 	 */
 	private int contenido;
 	
-	/**
-	 * Cliente que envía el mensaje
-	 */
-	private Cliente cliente;
-	
 	//....................................Metodos..............................
 	
 	/**
@@ -22,9 +17,8 @@ public class Mensaje {
 	 * @param cont contenido del mensaje
 	 * @param cli cliente que envía el mensaje
 	 */
-	public Mensaje(int cont, Cliente cli){
+	public Mensaje(int cont){
 		contenido = cont;
-		cliente = cli;
 	}
 	
 	/**

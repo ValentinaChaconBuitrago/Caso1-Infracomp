@@ -108,7 +108,7 @@ public class Buffer {
 		 * y un numero j que representa la capacidad del buffer
 		 * Continuan n filas con un numero r de mensajes de cada cliente.
 		 */
-		BufferedReader br =  new BufferedReader(new FileReader("data/Test.txt"));
+		BufferedReader br =  new BufferedReader(new FileReader("data/config.txt"));
 		String[] numeros = br.readLine().split(" ");
 		
 		//---------Leer el archivo de texto e inicializar los Threads con esa informacion--------
